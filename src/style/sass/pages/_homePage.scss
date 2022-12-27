@@ -1,0 +1,181 @@
+
+.homePageBody{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.chatContainer{
+  margin-top: 4%;
+  height: 75%;
+  width: 70%;
+  max-width: 1500px;
+  border-radius: 10px;
+  background-color: $primaryColor
+}
+
+.messagesContainer{
+  height: 85%;
+  width: 100%;
+  border-bottom: 1px solid $secondary-color;
+  padding: 0 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .fromAdaContainer{
+    display: flex;
+    justify-content: start;
+    width: 97%;
+  }
+  .fromMeContainer{
+    display: flex;
+    justify-content: end;
+    width: 92%;
+  }
+
+  p {
+    border-radius: 1.15rem;
+    line-height: 1.25;
+    max-width: 75%;
+    padding: 0.5rem .875rem;
+    position: relative;
+    word-wrap: break-word;
+    font-size: 20px;
+  }
+
+  p::before,
+  p::after {
+    bottom: -0.1rem;
+    content: "";
+    height: 1rem;
+    position: absolute;
+  }
+
+  p.from-me {
+    align-self: flex-end;
+    background-color: $message-me-color;
+    color: black;
+  }
+
+  p.from-me::before {
+    border-bottom-left-radius: 0.8rem 0.7rem;
+    border-right: 1rem solid $message-me-color;
+    right: -0.35rem;
+    transform: translate(0, -0.1rem);
+  }
+
+  p.from-me::after {
+    background-color: $primaryColor;
+    border-bottom-left-radius: 0.5rem;
+    right: -40px;
+    transform:translate(-30px, -2px);
+    width: 10px;
+  }
+
+  p[class^="from-"] {
+    margin: 0.5rem 0;
+    width: fit-content;
+  }
+
+  p.from-me ~ p.from-me {
+    margin: 0.25rem 0 0;
+  }
+
+  p.from-me ~ p.from-me:not(:last-child) {
+    margin: 0.25rem 0 0;
+  }
+
+  p.from-me ~ p.from-me:last-child {
+    margin-bottom: 0.5rem;
+  }
+
+  p.from-ada{
+    align-items: flex-start;
+    background-color: $message-ada-color;
+    color: #000;
+  }
+
+  p.from-ada:before {
+    border-bottom-right-radius: 0.8rem 0.7rem;
+    border-left: 1rem solid $message-ada-color;
+    left: -0.35rem;
+    transform: translate(0, -0.1rem);
+  }
+
+  p.from-ada::after {
+    background-color: $primaryColor;
+    border-bottom-right-radius: 0.5rem;
+    left: 20px;
+    transform: translate(-30px, -2px);
+    width: 10px;
+  }
+
+  p[class^="from-"].emoji {
+    background: none;
+    font-size: 2.5rem;
+  }
+
+  p[class^="from-"].emoji::before {
+    content: none;
+  }
+
+  .no-tail::before {
+    display: none;
+  }
+
+  .margin-b_none {
+    margin-bottom: 0 !important;
+  }
+
+  .margin-b_one {
+    margin-bottom: 1rem !important;
+  }
+
+  .margin-t_one {
+    margin-top: 1rem !important;
+  }
+}
+
+.inputContainer{
+  width: 100%;
+  height: 15%;
+  @include flex-centre;
+
+  input{
+    all: unset;
+    background-color: darken($primaryColor, 15%);
+    width: 80%;
+    height: 50%;
+    border-radius: 8px 0 0 8px;
+    padding: 5px;
+    font-size: 20px;
+  }
+}
+
+.submitContainer{
+  width: 5%;
+  height: 50%;
+  background-color: darken($primaryColor, 20%);
+  border-radius: 0 8px 8px 0;
+  padding: 5px;
+  @include flex-centre;
+
+  .submitIcon{
+    font-size: 35px;
+    transition: color 0.3s ease-out;
+  }
+
+  .invalidSubmitIcon{
+    font-size: 35px;
+    transition: color 0.3s ease-out;
+    opacity: 30%;
+  }
+}
+
+.submitContainer:hover > .submitIcon{
+  color: white;
+  cursor: pointer;
+}
+

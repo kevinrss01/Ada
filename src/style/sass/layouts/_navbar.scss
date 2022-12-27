@@ -3,11 +3,52 @@
   height: 60px;
   background-color: $primaryColor;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+
+  .linkContainer{
+    padding: 5px;
+    @include flex-centre;
+    position: absolute;
+
+    a{
+      @include flex-centre;
+      padding: 2px;
+    }
+
+    a:hover > .linkIcon{
+      color: white;
+    }
+
+    .linkIcon{
+      cursor: pointer;
+      color: $secondary-color;
+      transition: color 0.3s ease-out;
+      font-size: 35px;
+    }
+
+  }
+
+  a{
+    all: unset;
+  }
+
+  h1{
+    padding: 5px;
+    cursor: pointer;
+    transition: color 0.3s ease-out;
+  }
+
+  h1:hover{
+    color: white;
+  }
 }
 
-h1{
-  margin: 0;
-}
+
+
+
 
 
 
