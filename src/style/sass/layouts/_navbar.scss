@@ -7,11 +7,13 @@
   align-items: center;
   justify-content: space-between;
 
-
+  img{
+    height: 60px;
+  }
   .linkContainer{
     padding: 5px;
     @include flex-centre;
-    position: absolute;
+
 
     a{
       @include flex-centre;

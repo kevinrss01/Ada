@@ -4,13 +4,16 @@ import {
   AiFillGithub,
   AiFillTwitterCircle,
 } from "react-icons/ai";
+import robotImage from "../assets/robot_icon.png";
 export const Navbar = () => {
   return (
     <div className="navbarContainer">
-      <div></div>
       <Link to="/">
         <h1>ADA ROBOT</h1>
       </Link>
+      <div>
+        <img src={robotImage} alt="Robot icon" />
+      </div>
       <div className="linkContainer">
         <a href="https://www.linkedin.com/in/kevin-rousseau01/">
           <AiFillLinkedin className="linkIcon" />
