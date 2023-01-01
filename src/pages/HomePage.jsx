@@ -3,6 +3,8 @@ import { apiFunction } from "../functions/ApiCall";
 import { useEffect, useState } from "react";
 import Typewriter from "typewriter-effect/dist/core";
 import { LanguagePage } from "./LanguagePage";
+import Loader from "react-loading";
+import { Quotes } from "./Quotes";
 
 export const HomePage = () => {
   const [language, setLanguage] = useState("");
@@ -10,6 +12,7 @@ export const HomePage = () => {
   const [input, setInput] = useState("");
   const [userName, setUserName] = useState("");
   const [count, setCount] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
   //Check the localStorage to see language and display
   useEffect(() => {
@@ -77,20 +80,42 @@ export const HomePage = () => {
         </div>`
     );
   };
-
   const onSubmit = (input) => {
+    setIsLoading(true);
     const name = cleanName(input);
     setUserName(name);
     myAnswer(name);
     setInput("");
 
-    setTimeout(function () {
-      apiFunction(name, count).then((response) => {
+    apiFunction(name, count)
+      .then((response) => {
         insertResponseInHTML(response);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("an error is produced please reload the page");
+        setIsLoading(false);
       });
-    }, 500);
+
     setCount(count + 1);
   };
+
+  useEffect(() => {
+    if (count === 4) {
+      setTimeout(() => {
+        if (language === "fr") {
+          alert(
+            "Ce programme ne continue pas après 3 questions. Merci d'avoir testé mon site web ! "
+          );
+        } else {
+          alert(
+            "This program does not continue after 3 questions. Thank you for testing my website!"
+          );
+        }
+      }, 5000);
+    }
+  }, [count]);
 
   const setWelcomeMessage = (language) => {
     let welcomeMessage;
@@ -135,6 +160,17 @@ export const HomePage = () => {
       >
         <div className="chatContainer">
           <div className="messagesContainer">
+            {isLoading ? (
+              <Loader
+                className={"loader"}
+                type={"spinningBubbles"}
+                color={"#3C4048"}
+                delay={10}
+              />
+            ) : (
+              <></>
+            )}
+
             <div className="fromAdaContainer">
               <p className="from-ada"></p>
             </div>
@@ -145,7 +181,7 @@ export const HomePage = () => {
               name="inputText"
               onChange={handleInput}
               value={input}
-              maxLength={30}
+              maxLength={count === 4 ? 0 : 30}
               minLength={3}
               onKeyDown={(event) => {
                 if (input.length > 2) {
@@ -175,6 +211,7 @@ export const HomePage = () => {
             </div>
           </div>
         </div>
+        <Quotes />
       </div>
     </div>
   );

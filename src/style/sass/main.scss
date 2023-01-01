@@ -3,7 +3,7 @@
 // BASE -> Fondations du site, polices de caractère, normes, box-sizing, etc...
 @import "base/base";
 // COMPONENTS -> Blocs indépendants comme les boutons.
-
+@import 'components/loader';
 // LAYOUTS -> Ce qui est réutilisable comme le footer ou le header ou une navbar.
 @import "layouts/navbar";
 // PAGES -> Blocs de code qui ne s'applique qu'a une seule page. Les règles spécifiques à une seule page.
