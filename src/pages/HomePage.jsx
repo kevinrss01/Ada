@@ -1,46 +1,43 @@
 import { BiSend } from "react-icons/bi";
-
 import { apiFunction } from "../functions/ApiCall";
 import { useEffect, useState } from "react";
-import Typewriter from "typewriter-effect";
+import Typewriter from "typewriter-effect/dist/core";
+import { LanguagePage } from "./LanguagePage";
 
 export const HomePage = () => {
-  const [language, setLanguage] = useState("en");
+  const [language, setLanguage] = useState("");
   const [isLanguageChosen, setIsLanguageChosen] = useState(false);
   const [input, setInput] = useState("");
   const [userName, setUserName] = useState("");
+  const [count, setCount] = useState(1);
 
+  //Check the localStorage to see language and display
   useEffect(() => {
     return () => {
       if (localStorage.language) {
-        setIsLanguageChosen(true);
-      }
+        if (localStorage.language === "fr") {
+          setLanguage("fr");
+          displayWelcomeMessage("fr");
+        }
+        if (localStorage.language === "en") {
+          setLanguage("en");
+          displayWelcomeMessage("en");
+        }
 
-      if (localStorage.language === "fr") {
-        setLanguage("fr");
+        setIsLanguageChosen(true);
       }
     };
   }, []);
 
   const handleInput = (event) => {
+    if (count === 1) {
+      if (event.target.value.indexOf(" ") !== -1) {
+        return;
+      }
+    }
+
     setInput(event.target.value);
   };
-
-  /*const insertHTML = (dataToInsert) => {
-    const containerMessage = document.querySelector(".messagesContainer");
-    containerMessage.insertAdjacentHTML(
-      "beforeend",
-      `<div class="fromAdaContainer">
-             <p class="from-ada"> 
-                <Typewriter>
-                    onInit={(typeWriter) => {
-                        typeWriter.typeString(beforeSentence + dataToInsert + afterSentence).start();
-                    }}
-                </Typewriter>
-             </p>
-          </div>`
-    );
-  };*/
 
   const toggleIsLanguageChosen = (language) => {
     if (language === "fr") {
@@ -58,7 +55,9 @@ export const HomePage = () => {
     containerMessage.insertAdjacentHTML(
       "beforeend",
       `<div class="fromMeContainer">
-             <p class="from-me">${answer}</p>
+             <p class="from-me">
+             ${answer}
+             </p>
           </div>`
     );
   };
@@ -69,14 +68,54 @@ export const HomePage = () => {
     return firstLater + remainingLetters;
   };
 
+  const insertResponseInHTML = (dataToInsert) => {
+    const containerMessage = document.querySelector(".messagesContainer");
+    containerMessage.insertAdjacentHTML(
+      "beforeend",
+      `<div class="fromAdaContainer">
+          <p  class="from-ada">${dataToInsert}</p>
+        </div>`
+    );
+  };
+
   const onSubmit = (input) => {
     const name = cleanName(input);
     setUserName(name);
     myAnswer(name);
     setInput("");
+
     setTimeout(function () {
-      apiFunction(name, "1");
-    }, 1000);
+      apiFunction(name, count).then((response) => {
+        insertResponseInHTML(response);
+      });
+    }, 500);
+    setCount(count + 1);
+  };
+
+  const setWelcomeMessage = (language) => {
+    let welcomeMessage;
+    if (language === "fr") {
+      welcomeMessage =
+        "Bonjour ! <br />\n" +
+        "        Je me présente, je suis <b>ADA</b> une intelligence artificielle créée\n" +
+        "        pour simuler un être humain. Faisons connaissance, comment t'appelles-tu\n" +
+        "        ?";
+    } else {
+      welcomeMessage =
+        "Hello ! <br />I introduce myself, I am ADA an artificial intelligence\n" +
+        "        created to simulate a human being. Let’s get acquainted, what is your\n" +
+        "        name?";
+    }
+    return welcomeMessage;
+  };
+  const displayWelcomeMessage = (language) => {
+    const welcomeMessage = setWelcomeMessage(language);
+    const containerMessage = document.querySelector(".from-ada");
+    const typewriter = new Typewriter(containerMessage, {
+      loop: false,
+      delay: 20,
+    });
+    typewriter.typeString(welcomeMessage).start();
   };
 
   return (
@@ -84,29 +123,10 @@ export const HomePage = () => {
       {isLanguageChosen ? (
         <></>
       ) : (
-        <>
-          <div className="chooseLangueContainer">
-            <p>Choose your language.</p>
-            <div className="languages">
-              <div
-                className="lgButton"
-                onClick={() => {
-                  toggleIsLanguageChosen("fr");
-                }}
-              >
-                <p>Français</p> <span>🇫🇷</span>
-              </div>
-              <div
-                className="lgButton"
-                onClick={() => {
-                  toggleIsLanguageChosen("en");
-                }}
-              >
-                <p>English</p> <span>🇺🇸</span>
-              </div>
-            </div>
-          </div>
-        </>
+        <LanguagePage
+          toggleIsLanguageChosen={toggleIsLanguageChosen}
+          displayWelcomeMessage={displayWelcomeMessage}
+        />
       )}
       <div
         className={
@@ -116,22 +136,7 @@ export const HomePage = () => {
         <div className="chatContainer">
           <div className="messagesContainer">
             <div className="fromAdaContainer">
-              <p className="from-ada">
-                {language === "en" ? (
-                  <>
-                    Hello ! <br />I introduce myself, I am ADA an artificial
-                    intelligence created to simulate a human being. Let’s get
-                    acquainted, what is your name?
-                  </>
-                ) : (
-                  <>
-                    Bonjour ! <br />
-                    Je me présente, je suis <b>ADA</b> une intelligence
-                    artificielle créée pour simuler un être humain. Faisons
-                    connaissance, comment t'appelles-tu ?
-                  </>
-                )}
-              </p>
+              <p className="from-ada"></p>
             </div>
           </div>
           <div className="inputContainer">
@@ -145,7 +150,9 @@ export const HomePage = () => {
               onKeyDown={(event) => {
                 if (input.length > 2) {
                   if (event.key === "Enter") {
-                    onSubmit(input);
+                    if (input) {
+                      onSubmit(input);
+                    }
                   }
                 }
               }}
@@ -154,7 +161,9 @@ export const HomePage = () => {
               className="submitContainer"
               onClick={() => {
                 if (input.length > 2) {
-                  onSubmit(input);
+                  if (input) {
+                    onSubmit(input);
+                  }
                 }
               }}
             >
