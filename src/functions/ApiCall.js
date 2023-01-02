@@ -25,7 +25,7 @@ export const apiFunction = async (input, questionNumber) => {
     }
   }
 
-  async function askQuestionToOpenAi(prompt) {
+  async function askQuestionToOpenAi(prompt, stop) {
     const response = await fetch("https://api.openai.com/v1/completions", {
       method: "POST",
       headers: {
@@ -42,6 +42,10 @@ export const apiFunction = async (input, questionNumber) => {
         presence_penalty: 0,
       }),
     });
+
+    if (stop) {
+      response.stop = [stop];
+    }
 
     return response.json();
   }
@@ -90,7 +94,7 @@ export const apiFunction = async (input, questionNumber) => {
 
       const createFunFactName = async (question) => {
         try {
-          const res = await askQuestionToOpenAi(question);
+          const res = await askQuestionToOpenAi(question, ".");
           const adaResponse = res.choices[0].text;
           const beforeSentence = "Savais-tu que ";
           const afterSentence = " ?" + "<br/>" + "<br>";
@@ -127,7 +131,7 @@ export const apiFunction = async (input, questionNumber) => {
 
         const userJob = deleteUselessWordInInput(input);
         questionToAskToOpenAi = `Explique moi simplement ce qu'est être ${userJob} `;
-        const res = await askQuestionToOpenAi(questionToAskToOpenAi);
+        const res = await askQuestionToOpenAi(questionToAskToOpenAi, ".");
         const adaResponse = res.choices[0].text;
         adaAnswerCleaned = `${sentenceBeginning}D'après mes connaissances ${adaResponse}.<br/> J'imagine qu'être ${userJob} n'est pas ta seule occupation, as-tu des hobbies ou des passions dans la vie ?`;
 
@@ -143,8 +147,10 @@ export const apiFunction = async (input, questionNumber) => {
         const endSentence = `Tu en as de la chance, personnellement j'ai été conçu pour ne pas avoir de préférence...`;
         const userHobbies = input;
 
-        questionToAskToOpenAi = `Fais une supposition sur ma personne en fonction de ces passions : ${userHobbies}`;
+        questionToAskToOpenAi = `Fais une supposition sur ma personne en fonction de ces ou de cette passion : ${userHobbies}.`;
+        console.log(questionToAskToOpenAi);
         const adaResponse = await askQuestionToOpenAi(questionToAskToOpenAi);
+        console.log(adaResponse);
         adaAnswerCleaned = `En fonction des informations que j'ai voici un petit résumé que j'ai fait sur toi :<br/><br/>${adaResponse.choices[0].text}.<br/> ${endSentence}`;
 
         if (localStorage.language === "en") {

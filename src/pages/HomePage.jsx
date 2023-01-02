@@ -81,13 +81,17 @@ export const HomePage = () => {
     );
   };
   const onSubmit = (input) => {
+    if (count === 1) {
+      const name = cleanName(input);
+      setUserName(name);
+      myAnswer(name);
+    } else {
+      myAnswer(input);
+    }
     setIsLoading(true);
-    const name = cleanName(input);
-    setUserName(name);
-    myAnswer(name);
     setInput("");
 
-    apiFunction(name, count)
+    apiFunction(input, count)
       .then((response) => {
         insertResponseInHTML(response);
         setIsLoading(false);
