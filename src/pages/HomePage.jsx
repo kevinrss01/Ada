@@ -5,7 +5,6 @@ import Typewriter from "typewriter-effect/dist/core";
 import { LanguagePage } from "./LanguagePage";
 import Loader from "react-loading";
 import { Quotes } from "./Quotes";
-import { Helmet } from "react-helmet";
 
 export const HomePage = () => {
   const [language, setLanguage] = useState("");

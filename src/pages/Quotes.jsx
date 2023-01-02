@@ -35,7 +35,7 @@ export const Quotes = () => {
           <>
             <p>"{quote}"</p>
             <p>
-              <a href={author?.url}>
+              <a href={author?.url} target="_blank">
                 <i>- {author?.name} </i>
               </a>
             </p>
