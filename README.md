@@ -4,7 +4,7 @@ A small project that allows to discuss with an artificial intelligence simulatin
 
 ## What is it really?
 
-An application written in ReactJS and nodeJs that communicates with the chatGPT API and a translation API. I process the answers to make it look as human as possible.
+An application written in ReactJS and nodeJs that communicates with the chatGPT API and a translation API. I process the API answers to make it look as human as possible.
 
 ## Start the project locally
 
