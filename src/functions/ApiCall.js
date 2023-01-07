@@ -44,7 +44,7 @@ export const apiFunction = async (input, questionNumber) => {
     });
 
     if (stop) {
-      response.stop = [stop];
+      response.body.stop = [stop];
     }
 
     return response.json();
