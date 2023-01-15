@@ -1,14 +1,14 @@
-# What is it ?
+# What is it?
 
-A small project that allows to discuss with an artificial intelligence simulating a human.
+A small project that allows discussing with an artificial intelligence simulating a human.
 
 ## What is it really?
 
-An application written in ReactJS and nodeJs that communicates with the chatGPT API and a translation API. I process the answers to make it look as human as possible.
+An application codded with ReactJS and nodeJs that communicates with the chatGPT API and a translation API. I process the API answers to make them look as human as possible.
 
 ## Start the project locally
 
-Make sur you have nodeJs and npm installed
+Make sure you have Node installed
 - `Git clone` the project
 - `npm install`
 - `npm start`
