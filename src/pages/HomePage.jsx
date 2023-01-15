@@ -1,35 +1,18 @@
 import { BiSend } from "react-icons/bi";
-import { apiFunction } from "../functions/ApiCall";
+import { questionFunction } from "../functions/ApiCall";
 import { useEffect, useState } from "react";
 import Typewriter from "typewriter-effect/dist/core";
-import { LanguagePage } from "./LanguagePage";
 import Loader from "react-loading";
 import { Quotes } from "./Quotes";
 
 export const HomePage = () => {
-  const [language, setLanguage] = useState("");
-  const [isLanguageChosen, setIsLanguageChosen] = useState(false);
   const [input, setInput] = useState("");
   const [userName, setUserName] = useState("");
   const [count, setCount] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
-  //Check the localStorage to see language and display
   useEffect(() => {
-    return () => {
-      if (localStorage.language) {
-        if (localStorage.language === "fr") {
-          setLanguage("fr");
-          displayWelcomeMessage("fr");
-        }
-        if (localStorage.language === "en") {
-          setLanguage("en");
-          displayWelcomeMessage("en");
-        }
-
-        setIsLanguageChosen(true);
-      }
-    };
+    displayWelcomeMessage();
   }, []);
 
   const handleInput = (event) => {
@@ -40,17 +23,6 @@ export const HomePage = () => {
     }
 
     setInput(event.target.value);
-  };
-
-  const toggleIsLanguageChosen = (language) => {
-    if (language === "fr") {
-      setLanguage("fr");
-      localStorage.setItem("language", "fr");
-    } else {
-      setLanguage("en");
-      localStorage.setItem("language", "en");
-    }
-    setIsLanguageChosen(true);
   };
 
   const myAnswer = (answer) => {
@@ -91,7 +63,7 @@ export const HomePage = () => {
     setIsLoading(true);
     setInput("");
 
-    apiFunction(input, count)
+    questionFunction(input, count)
       .then((response) => {
         insertResponseInHTML(response);
         setIsLoading(false);
@@ -108,37 +80,17 @@ export const HomePage = () => {
   useEffect(() => {
     if (count === 4) {
       setTimeout(() => {
-        if (language === "fr") {
-          alert(
-            "Ce programme ne continue pas après 3 questions. Merci d'avoir testé mon site web ! "
-          );
-        } else {
-          alert(
-            "This program does not continue after 3 questions. Thank you for testing my website!"
-          );
-        }
+        alert(
+          "This program does not continue after 3 questions. Thank you for testing my website!"
+        );
       }, 5000);
     }
   }, [count]);
 
-  const setWelcomeMessage = (language) => {
-    let welcomeMessage;
-    if (language === "fr") {
-      welcomeMessage =
-        "Bonjour ! <br />\n" +
-        "        Je me présente, je suis <b>ADA</b> une intelligence artificielle créée\n" +
-        "        pour simuler un être humain. Faisons connaissance, comment t'appelles-tu\n" +
-        "        ?";
-    } else {
-      welcomeMessage =
-        "Hello ! <br />I introduce myself, I am ADA an artificial intelligence\n" +
-        "        created to simulate a human being. Let’s get acquainted, what is your\n" +
-        "        name?";
-    }
-    return welcomeMessage;
-  };
-  const displayWelcomeMessage = (language) => {
-    const welcomeMessage = setWelcomeMessage(language);
+  let welcomeMessage =
+    "Hello ! <br/> I introduce my self, I am ADA an artificial intelligence created to simulate a human being. Let's get acquainted, what is your name ?";
+
+  const displayWelcomeMessage = () => {
     const containerMessage = document.querySelector(".from-ada");
     const typewriter = new Typewriter(containerMessage, {
       loop: false,
@@ -149,19 +101,7 @@ export const HomePage = () => {
 
   return (
     <div className="homePage">
-      {isLanguageChosen ? (
-        <></>
-      ) : (
-        <LanguagePage
-          toggleIsLanguageChosen={toggleIsLanguageChosen}
-          displayWelcomeMessage={displayWelcomeMessage}
-        />
-      )}
-      <div
-        className={
-          isLanguageChosen ? "homePageBody" : "homePageBody blurBackground"
-        }
-      >
+      <div className="homePageBody">
         <div className="chatContainer">
           <div className="messagesContainer">
             {isLoading ? (
