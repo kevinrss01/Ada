@@ -1,6 +1,7 @@
 import { questionOne } from "./questionOne";
 import { questionTwo } from "./questionTwo";
 import { questionThree } from "./questionThree";
+import { questionFour } from "./questionFour";
 
 export async function askQuestionToOpenAi(prompt, stopValue) {
   let stopCaractere = "µπ";
@@ -11,8 +12,8 @@ export async function askQuestionToOpenAi(prompt, stopValue) {
   const body = JSON.stringify({
     model: "text-davinci-003",
     prompt: prompt,
-    temperature: 0.5,
-    max_tokens: 150,
+    temperature: 0.7,
+    max_tokens: 420,
     top_p: 1,
     frequency_penalty: 0.5,
     presence_penalty: 0,
@@ -46,21 +47,28 @@ export const deleteUselessWordInInput = (userInput) => {
   return userInput;
 };
 
+let userName;
+let userJob;
 export const questionFunction = async (input, questionNumber) => {
-  //Clean the input to ask a good question to chatGPT
-
+  if (!input) {
+    throw new Error("Wrong Input");
+  }
   let adaAnswerCleaned = "";
-  let userName;
 
   switch (questionNumber) {
     case 1:
+      userName = input;
       adaAnswerCleaned = await questionOne(input);
       break;
     case 2:
+      userJob = input;
       adaAnswerCleaned = await questionTwo(input);
       break;
     case 3:
-      adaAnswerCleaned = await questionThree(input);
+      adaAnswerCleaned = await questionThree(input, userName, userJob);
+      break;
+    case 4:
+      adaAnswerCleaned = await questionFour(input);
       break;
     default:
       throw new Error("Incorrect number question !");

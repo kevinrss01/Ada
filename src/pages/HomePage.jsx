@@ -7,9 +7,13 @@ import { Quotes } from "./Quotes";
 
 export const HomePage = () => {
   const [input, setInput] = useState("");
-  const [userName, setUserName] = useState("");
   const [count, setCount] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [displayErrorInputMessage, setDisplayErrorInputMessage] =
+    useState(false);
+  const [errorMessage, setErrorMessage] = useState(
+    "There is an error, please verify the input."
+  );
 
   useEffect(() => {
     displayWelcomeMessage();
@@ -17,7 +21,10 @@ export const HomePage = () => {
 
   const handleInput = (event) => {
     if (count === 1) {
+      //Error input handling
       if (event.target.value.indexOf(" ") !== -1) {
+        setDisplayErrorInputMessage(true);
+        setErrorMessage("There is no space in a name");
         return;
       }
     }
@@ -53,9 +60,12 @@ export const HomePage = () => {
     );
   };
   const onSubmit = (input) => {
+    if (input.length < 2 || input.length > 30) {
+      throw new Error("Input length Incorrect.");
+    }
+
     if (count === 1) {
       const name = cleanName(input);
-      setUserName(name);
       myAnswer(name);
     } else {
       myAnswer(input);
@@ -75,13 +85,14 @@ export const HomePage = () => {
       });
 
     setCount(count + 1);
+    setDisplayErrorInputMessage(false);
   };
 
   useEffect(() => {
-    if (count === 4) {
+    if (count === 5) {
       setTimeout(() => {
         alert(
-          "This program does not continue after 3 questions. Thank you for testing my website!"
+          "This program does not continue after 4 questions. Thank you for testing my website!"
         );
       }, 5000);
     }
@@ -119,40 +130,52 @@ export const HomePage = () => {
               <p className="from-ada"></p>
             </div>
           </div>
-          <div className="inputContainer">
-            <input
-              type="text"
-              name="inputText"
-              onChange={handleInput}
-              value={input}
-              maxLength={count === 4 ? 0 : 30}
-              minLength={3}
-              onKeyDown={(event) => {
-                if (input.length > 2) {
+          <div className="bottomContainer">
+            <div className="inputContainer">
+              <input
+                type="text"
+                name="inputText"
+                onChange={handleInput}
+                value={input}
+                maxLength={count === 5 ? 0 : 30}
+                minLength={3}
+                onKeyDown={(event) => {
                   if (event.key === "Enter") {
+                    if (input.length > 2) {
+                      if (input) {
+                        onSubmit(input);
+                      }
+                    } else {
+                      setDisplayErrorInputMessage(true);
+                      setErrorMessage(
+                        "Please give an answer minimum 3 characters and maximum 30 characters."
+                      );
+                    }
+                  }
+                }}
+              />
+              <div
+                className="submitContainer"
+                onClick={() => {
+                  if (input.length > 2) {
                     if (input) {
                       onSubmit(input);
                     }
                   }
-                }
-              }}
-            />
-            <div
-              className="submitContainer"
-              onClick={() => {
-                if (input.length > 2) {
-                  if (input) {
-                    onSubmit(input);
+                }}
+              >
+                <BiSend
+                  className={
+                    input.length > 2 ? "submitIcon" : "invalidSubmitIcon"
                   }
-                }
-              }}
-            >
-              <BiSend
-                className={
-                  input.length > 2 ? "submitIcon" : "invalidSubmitIcon"
-                }
-              />
+                />
+              </div>
             </div>
+            {displayErrorInputMessage ? (
+              <span className="errorMessage">{errorMessage}</span>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <Quotes />
