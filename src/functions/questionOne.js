@@ -26,7 +26,7 @@ export const questionOne = async (input) => {
       introductionSentence = createIntroduction(name);
       const questionToAskToOpenAi = `Give me an interesting universal fact about the name ${name} in a sentence that begins with ${name}`;
       funFactAboutName = await createFunFactName(questionToAskToOpenAi);
-      const questionAboutJob = `Can I ask you what you do for a living ${name} ?`;
+      const questionAboutJob = `What do you do for a living ${name}?`;
 
       return introductionSentence + funFactAboutName + questionAboutJob;
     } catch (error) {
