@@ -18,7 +18,6 @@ export const Quotes = () => {
     axios
       .request(options)
       .then(function (response) {
-        console.log(response.data.originator);
         setQuote(response.data.content);
         setAuthor(response.data.originator);
       })
