@@ -10,8 +10,6 @@ export async function askQuestionToOpenAi(prompt, stopValue) {
       stopCaractere = stopValue;
     }
 
-    console.log(process.env.REACT_APP_OPENAI_API_KEY);
-
     const body = JSON.stringify({
       model: "text-davinci-003",
       prompt: prompt,
